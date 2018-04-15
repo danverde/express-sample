@@ -3,19 +3,20 @@ const fileUpload = require('express-fileupload');
 
 const path = require('path');
 const chalk = require('chalk');
-const fs = require('fs');
+// const fs = require('fs');
 
 const port = '8000';
 var app = express();
 
 // allows access straight to file system.
 app.use(express.static('public'));
-app.use(fileUpload());
+app.use(fileUpload({
+    safeFileNames: true,
+    preserveExtension: true
+}));
 
 
 app.get('/', (req, res) => {
-    // res.send('Hello World');
-
     // This is how to send html files (or other files)
     res.sendFile(path.resolve('.', 'index.html'));
 
@@ -33,7 +34,7 @@ app.post('/upload', function (req, res) {
     // mv is a built in function. IDK if it works better or worse than fs
     uploadFile.mv(`./uploads/${uploadFile.name}`, (writeErr) => {
         if (writeErr) {
-            console.error(writeErr);
+            console.error(chalk.red(writeErr));
             res.status(500).send('Unable to save file');
         }
 
@@ -50,8 +51,17 @@ app.post('/upload', function (req, res) {
 
 });
 
-
+app.get('/download', (req, res) => {
+    res.download('./public/car.jpg', 'sample image.jpg', (err) => {
+        if (err) {
+            console.error(chalk.red(err));
+            // idk how to handle that issue...
+            return;
+        }
+        console.log('success');
+    });
+});
 
 app.listen(port, () => {
-    console.log(chalk.green(`App listening on port ${port}`));
+    console.log(chalk.green(`server open at: http://localhost:${port}/`));
 });
