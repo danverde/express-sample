@@ -10,7 +10,7 @@ const port = '8000';
 var app = express();
 
 // allows access straight to file system.
-app.use(express.static('public'));
+app.use(express.static('view'));
 app.use(fileUpload({
     safeFileNames: true,
     preserveExtension: true
@@ -59,7 +59,6 @@ app.post('/upload', (req, res) => {
 
 app.post('/upload2', (req, res) => {
     function saveFile(uploadFile, cb) {
-        console.log('called');
         fs.writeFile(`./uploads/${uploadFile.name}`, uploadFile.data, (writeErr) => {
             if (writeErr) {
                 cb(writeErr);

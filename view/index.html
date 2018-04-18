@@ -1,0 +1,32 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <style>
+        form {
+            border: 1px solid black;
+            padding: 15px;
+            margin-top: 20px;
+        }
+    </style>
+    <script src="index.js" type="text/javascript"></script>
+</head>
+
+<body>
+    <h1> Welcome to my wonderfully made website </h1>
+    <form method="POST" action="/upload" enctype="multipart/form-data">
+        <input name='imageUpload' type="file" multiple>
+        <input type="submit" value="Upload file">
+        <!-- <button id="uploadImg" type="button" >Upload</button> -->
+    </form>
+
+    <form method="POST" action="/upload2" name="anotherForm" , enctype="multipart/form-data">
+        <input name='imageUpload' type="file" multiple>
+        <input type="text" name="fileName">
+        <input type="submit" value="Submit">
+    </form>
+
+    <div id="output"></div>
+</body>
+
+</html>
