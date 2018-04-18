@@ -4,6 +4,7 @@ const fileUpload = require('express-fileupload');
 const path = require('path');
 const chalk = require('chalk');
 const fs = require('fs');
+const asyncLib = require('async');
 
 const port = '8000';
 var app = express();
@@ -30,8 +31,8 @@ app.post('/upload', (req, res) => {
 
     // imageUpload is the name attribute on the file input
     // console.log(req.files);
-    
-    
+
+
     // let uploadFile = req.files.imageUpload;
     let uploadFiles = req.files.imageUpload;
     uploadFiles.forEach((uploadFile) => {
@@ -43,7 +44,7 @@ app.post('/upload', (req, res) => {
         //         console.error(chalk.red(writeErr));
         //         res.status(500).send('Unable to save file');
         //     }
-            
+
         //     res.send(`Successfully uploaded ${uploadFile.name}`);
         // });
         fs.writeFile(`./uploads/${uploadFile.name}`, uploadFile.data, (writeErr) => {
@@ -57,9 +58,32 @@ app.post('/upload', (req, res) => {
 });
 
 app.post('/upload2', (req, res) => {
-    // console.log(req.body);
-    // console.log(req.files);
-    res.send(`I got the request ${JSON.stringify(req.body)}`);
+    function saveFile(uploadFile, cb) {
+        console.log('called');
+        fs.writeFile(`./uploads/${uploadFile.name}`, uploadFile.data, (writeErr) => {
+            if (writeErr) {
+                cb(writeErr);
+            } else {
+                res.write(`Wrote ${uploadFile.name}`);
+                cb(null);
+            }
+        });
+    } 
+
+
+
+    let uploadFiles = req.files.imageUpload;
+    console.log(uploadFiles instanceof Array);
+    asyncLib.eachSeries(uploadFiles, saveFile, (err) => {
+        if (err) {
+            console.error(err);
+            res.send('Failed to write files');
+        } else {
+            res.end('Complete');
+        }
+    });
+
+    // res.send(`I got the request ${JSON.stringify(req.body)}`);
 });
 
 app.get('/download', (req, res) => {
