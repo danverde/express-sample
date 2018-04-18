@@ -3,7 +3,7 @@ const fileUpload = require('express-fileupload');
 
 const path = require('path');
 const chalk = require('chalk');
-// const fs = require('fs');
+const fs = require('fs');
 
 const port = '8000';
 var app = express();
@@ -18,37 +18,48 @@ app.use(fileUpload({
 
 app.get('/', (req, res) => {
     // This is how to send html files (or other files)
-    res.sendFile(path.resolve('.', 'index.html'));
+    res.sendFile(path.resolve('.', './view/index.html'));
 
 });
 
 
-app.post('/upload', function (req, res) {
+app.post('/upload', (req, res) => {
     if (!req.files) {
         res.status(400).send('No file provided');
     }
 
     // imageUpload is the name attribute on the file input
-    let uploadFile = req.files.imageUpload;
+    // console.log(req.files);
+    
+    
+    // let uploadFile = req.files.imageUpload;
+    let uploadFiles = req.files.imageUpload;
+    uploadFiles.forEach((uploadFile) => {
+        console.log(uploadFile);
 
-    // mv is a built in function. IDK if it works better or worse than fs
-    uploadFile.mv(`./uploads/${uploadFile.name}`, (writeErr) => {
-        if (writeErr) {
-            console.error(chalk.red(writeErr));
-            res.status(500).send('Unable to save file');
-        }
-
-        res.send(`Successfully uploaded ${uploadFile.name}`);
+        // mv is a built in function. IDK if it works better or worse than fs
+        // uploadFile.mv(`./uploads/${uploadFile.name}`, (writeErr) => {
+        //     if (writeErr) {
+        //         console.error(chalk.red(writeErr));
+        //         res.status(500).send('Unable to save file');
+        //     }
+            
+        //     res.send(`Successfully uploaded ${uploadFile.name}`);
+        // });
+        fs.writeFile(`./uploads/${uploadFile.name}`, uploadFile.data, (writeErr) => {
+            if (writeErr) {
+                console.error(writeErr);
+                res.status(500).send('Unable to save file');
+            }
+        });
     });
-    /* fs.writeFile(`./uploads/${uploadFile.name}`, uploadFile.data, (writeErr) => {
-        if (writeErr) {
-            console.error(writeErr);
-            res.status(500).send('Unable to save file');
-        }
-        res.status(200).send('IT WORKED!');
-    }); */
+    res.status(200).send('IT WORKED!');
+});
 
-
+app.post('/upload2', (req, res) => {
+    // console.log(req.body);
+    // console.log(req.files);
+    res.send(`I got the request ${JSON.stringify(req.body)}`);
 });
 
 app.get('/download', (req, res) => {
