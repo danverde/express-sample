@@ -36,7 +36,7 @@ app.post('/upload', (req, res) => {
     // let uploadFile = req.files.imageUpload;
     let uploadFiles = req.files.imageUpload;
     uploadFiles.forEach((uploadFile) => {
-        console.log(uploadFile);
+        // console.log(uploadFile);
 
         // mv is a built in function. IDK if it works better or worse than fs
         // uploadFile.mv(`./uploads/${uploadFile.name}`, (writeErr) => {
@@ -72,7 +72,6 @@ app.post('/upload2', (req, res) => {
 
 
     let uploadFiles = req.files.imageUpload;
-    console.log(uploadFiles instanceof Array);
     asyncLib.eachSeries(uploadFiles, saveFile, (err) => {
         if (err) {
             console.error(err);

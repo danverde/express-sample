@@ -8,6 +8,21 @@
             padding: 15px;
             margin-top: 20px;
         }
+
+        #output {
+            margin: 20px;
+            border: 1px solid black;
+            height: 40px;
+            width: 200px;    
+        }
+
+        #progressBar {
+            width: 0%;
+            background-color: blue;
+            margin-top: 5%;
+            height:50%;
+            max-width: 200px;
+        }
     </style>
     <script src="index.js" type="text/javascript"></script>
 </head>
@@ -26,7 +41,9 @@
         <input type="submit" value="Submit">
     </form>
 
-    <div id="output"></div>
+    <div id="output">
+        <div id='progressBar'></div>
+    </div>
 </body>
 
 </html>
